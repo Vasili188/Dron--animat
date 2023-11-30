@@ -12,17 +12,17 @@ public class Trigger : MonoBehaviour
     
     void OnTriggerEnter(Collider other)
     {
-        if (!string.IsNullOrEmpty(tagFilter) && !other.GameObject.CompareTag(tagFilter)) return;
+        if (!String.IsNullOrEmpty(tagFilter) && !other.gameObject.CompareTag(tag))  return;
         onTriggerEnter.Invoke();
         if (destroyOnTriggerEnter)
         {
-            destroyOnTriggerEnter(gameObject);
+            Destroy(gameObject);
         }
     }
     
     void OnTriggerExit(Collider other)
     {
-        if (!string.IsNullOrEmpty(tagFilter) && !other.GameObject.CompareTag(tagFilter)) return;
+        if (!String.IsNullOrEmpty(tagFilter) && !other.gameObject.CompareTag(tag))  return;
         onTriggerExit.Invoke();
     }
 }
