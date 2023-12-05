@@ -4,30 +4,49 @@ public class QuadrocopterScript : MonoBehaviour
 {
     //public Vector3 Force;
     private Rigidbody rb;
-    public double movementAcceleration;
-    public float maxVeclocity;
-    public Vector3[] targets;
+    private double movementAcceleration;
+    private float maxVeclocity;
+    private Vector3[] targets;
+    private int currentTargetIndex;
+    private bool targetsTaken;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        movementAcceleration = 5;
+        maxVeclocity = 10;
+        targets = new Vector3[10] { new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), };
+        currentTargetIndex = 0;
+        targetsTaken = false;
     }
 
 
     void pickTargets(Vector3[] targets)
     {
-        for (var i = 0; i < targets.Length; i++)
+        Vector3 toTarget = targets[currentTargetIndex] - rb.position;
+        Debug.Log("targetsLength:"+targets.Length.ToString() + "curTargIndex:" + currentTargetIndex.ToString() + "distToTarget" + toTarget.magnitude.ToString());
+        if (toTarget.magnitude < 5)
+            currentTargetIndex++;
+        if (currentTargetIndex >= targets.Length)
         {
-            MoveToTarget(targets[i]);
-            if (rb.position == targets[i])  continue;
+            targetsTaken = true;
+            return;
         }
+        MoveToTarget(targets[currentTargetIndex]);
+
+        //for (var i = 0; i < targets.Length; i++)
+        //{
+        //    MoveToTarget(targets[i]);
+
+            //    if ((targets[i] - rb.position).magnitude < 1 )  continue;
+            //}
     }
 
     void MoveToTarget(Vector3 target)
     {
         Vector3 movingVector = target - rb.position;
-        MoveInDirection(movingVector, 1000, 100);
+        MoveInDirection(movingVector, movementAcceleration, maxVeclocity);
         //Debug.Log("Vector to target" + movingVector.ToString());
         //Debug.Log("Velocity after adding force" + rb.velocity.ToString());
     }
@@ -53,8 +72,10 @@ public class QuadrocopterScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        var targets = new Vector3[2] {new Vector3(50, 15, -30), new Vector3(50, 15, 30)};
-        pickTargets(targets);
+        if (!targetsTaken)
+            pickTargets(targets);
+        else
+            rb.velocity = new Vector3(0,0,0);
         //MoveToTarget(new Vector3(50, 15, -30));
         //Move(new Vector3(0, 10, 10));
     }
