@@ -2,17 +2,13 @@
 //using System.Collections.Generic;
 //using UnityEngine;
 
-//public class Grazing : MonoBehaviour
+//public class GrazingState : State
 //{
-//    // Start is called before the first frame update
-//    void Start()
-//    {
-        
-//    }
+//    //grazingRadius
 
-//    // Update is called once per frame
-//    void Update()
+
+//    public GrazingState(QuadrocopterScript character, StateMachine stateMachine) : base(character, stateMachine)
 //    {
-        
 //    }
 //}
+

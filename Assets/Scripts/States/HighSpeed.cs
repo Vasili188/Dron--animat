@@ -2,17 +2,42 @@
 //using System.Collections.Generic;
 //using UnityEngine;
 
-//public class HighSpeed : MonoBehaviour
+//public class HighSpeedState : State
 //{
-//    // Start is called before the first frame update
-//    void Start()
+//    private double maxSpeed;
+//    private double movementAcceleration;
+//    private Vector3 moveDirection;
+
+//    public HighSpeedState(QuadrocopterScript character, StateMachine stateMachine) : base(character, stateMachine)
 //    {
-        
 //    }
 
-//    // Update is called once per frame
-//    void Update()
+//    public override void Enter()
 //    {
-        
+//        base.Enter();
 //    }
+
+//    public override void Exit()
+//    {
+//        base.Exit();
+
+//    }
+
+//    public override void HandleInput()
+//    {
+//        base.HandleInput();
+//    }
+
+//    public override void LogicUpdate()
+//    {
+//        base.LogicUpdate();
+//    }
+
+//    public override void PhysicsUpdate()
+//    {
+//        base.PhysicsUpdate();
+//        character.MoveInDirection(moveDirection, movementAcceleration, maxSpeed);
+//    }
+
 //}
+
