@@ -10,15 +10,27 @@ public class QuadrocopterScript : MonoBehaviour
     private int currentTargetIndex;
     private bool targetsTaken;
 
+    //public StateMachine SM;
+    //public LyingState lying;
+
+
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         movementAcceleration = 5;
-        maxVeclocity = 10;
-        targets = new Vector3[10] { new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), };
+        maxVeclocity = 7;
+        targets = new Vector3[5] { new Vector3(50, 15, 20), new Vector3(50, 15, -10), new Vector3(12, 29, 20), new Vector3(-5, 19, -10), new Vector3(52, 15, 20) };
         currentTargetIndex = 0;
         targetsTaken = false;
+
+        //SM = new StateMachine();
+
+        //lying = new LyingState(this, SM);
+        //hovering = new HoveringState(this, SM);
+        //highSpeed = new HighSpeedState(this, SM);
+        //lowSpeed = new LowSpeedState(this, SM);
+        //SM.Initialize(hovering);
     }
 
 
@@ -52,7 +64,7 @@ public class QuadrocopterScript : MonoBehaviour
     }
 
 
-    void MoveInDirection(Vector3 direction, double movementAcceleration, double speed)
+    public void MoveInDirection(Vector3 direction, double movementAcceleration, double speed)
     {
         direction = direction.normalized;
         Vector3 force = direction * (float)movementAcceleration;
@@ -69,6 +81,13 @@ public class QuadrocopterScript : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        //SM.CurrentState.HandleInput();
+
+        //SM.CurrentState.LogicUpdate();
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -76,7 +95,9 @@ public class QuadrocopterScript : MonoBehaviour
             pickTargets(targets);
         else
             rb.velocity = new Vector3(0,0,0);
-        //MoveToTarget(new Vector3(50, 15, -30));
-        //Move(new Vector3(0, 10, 10));
+
+        //SM.CurrentState.PhysicsUpdate();
+
+
     }
 }
