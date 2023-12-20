@@ -2,57 +2,33 @@
 
 public class QuadrocopterScript : MonoBehaviour
 {
-    private Rigidbody rb;
+    public Rigidbody RB;
     private double movementAcceleration;
     private float maxVeclocity;
-    private Vector3[] targets;
-    private int currentTargetIndex;
-    private bool targetsTaken;
 
-    //public StateMachine SM;
-    //public LyingState lying;
-
+    public StateMachine SM;
+    public ChargingState charging;
+    public GrazingState grazing;
+    public Vector3[] fieldBorders;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        RB = GetComponent<Rigidbody>();
         movementAcceleration = 5;
         maxVeclocity = 7;
-        targets = new Vector3[5] { new Vector3(50, 15, 20), new Vector3(50, 15, -10), new Vector3(12, 29, 20), new Vector3(-5, 19, -10), new Vector3(52, 15, 20) };
-        currentTargetIndex = 0;
-        targetsTaken = false;
+        SM = new StateMachine();
 
-        //SM = new StateMachine();
-
-        //lying = new LyingState(this, SM);
-        //hovering = new HoveringState(this, SM);
-        //highSpeed = new HighSpeedState(this, SM);
-        //lowSpeed = new LowSpeedState(this, SM);
-        //SM.Initialize(hovering);
+        charging = new ChargingState(this, SM);
+        fieldBorders = new Vector3[2] { new Vector3(0, 10, 0),
+                                        new Vector3(100, 10, 100)}; //test Borders
+        grazing = new GrazingState(this, SM, fieldBorders);
+        SM.Initialize(grazing);
     }
 
-
-    void pickTargets(Vector3[] targets)
+    public void MoveToTarget(Vector3 target)
     {
-        if (targetsTaken)
-            return;
-
-        Vector3 toTarget = targets[currentTargetIndex] - rb.position;
-        Debug.Log("targetsLength:"+targets.Length.ToString() + "curTargIndex:" + currentTargetIndex.ToString() + "distToTarget" + toTarget.magnitude.ToString());
-        if (toTarget.magnitude < 5)
-            currentTargetIndex++;
-        if (currentTargetIndex >= targets.Length)
-        {
-            targetsTaken = true;
-            return;
-        }
-        MoveToTarget(targets[currentTargetIndex]);
-    }
-
-    void MoveToTarget(Vector3 target)
-    {
-        Vector3 movingVector = target - rb.position;
+        Vector3 movingVector = target - RB.position;
         MoveInDirection(movingVector, movementAcceleration, maxVeclocity);
     }
 
@@ -61,24 +37,24 @@ public class QuadrocopterScript : MonoBehaviour
     {
         direction = direction.normalized;
         Vector3 force = direction * (float)movementAcceleration;
-        rb.AddForce(force);
-        if (rb.velocity.magnitude > speed)
+        RB.AddForce(force);
+        if (RB.velocity.magnitude > speed)
         {
-            rb.velocity = rb.velocity.normalized * (float)speed;
+            RB.velocity = RB.velocity.normalized * (float)speed;
         }
     }
 
     private void Update()
     {
-        //SM.CurrentState.HandleInput();
 
-        //SM.CurrentState.LogicUpdate();
+        SM.CurrentState.HandleInput();
+
+        SM.CurrentState.LogicUpdate();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        pickTargets(targets);
-        //SM.CurrentState.PhysicsUpdate();
+        SM.CurrentState.PhysicsUpdate();
     }
 }
