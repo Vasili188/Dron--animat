@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class QuadrocopterScript : MonoBehaviour
 {
@@ -6,7 +8,7 @@ public class QuadrocopterScript : MonoBehaviour
     private double movementAcceleration;
     private float maxVeclocity;
     private Vector3[] targets;
-    private int currentTargetIndex;
+    public int currentTargetIndex;
     private bool targetsTaken;
 
     // Start is called before the first frame update
@@ -14,8 +16,8 @@ public class QuadrocopterScript : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         movementAcceleration = 5;
-        maxVeclocity = 10;
-        targets = new Vector3[10] { new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), new Vector3(50, 15, 20), new Vector3(50, 35, -10), };
+        maxVeclocity = 7;
+        targets = new Vector3[8] { new Vector3(50, 15, -10), new Vector3(-50, 15, -10), new Vector3(-50, 15, 30), new Vector3(50, 15, 30), new Vector3(50, 15, -30), new Vector3(-50, 15, -30), new Vector3(-50, 15, 30), new Vector3(50, 15, 30) };
         currentTargetIndex = 0;
         targetsTaken = false;
     }
@@ -27,9 +29,12 @@ public class QuadrocopterScript : MonoBehaviour
             return;
 
         Vector3 toTarget = targets[currentTargetIndex] - rb.position;
-        Debug.Log("targetsLength:"+targets.Length.ToString() + "curTargIndex:" + currentTargetIndex.ToString() + "distToTarget" + toTarget.magnitude.ToString());
-        if (toTarget.magnitude < 5)
+        // Debug.Log("targetsLength:"+targets.Length.ToString() + "curTargIndex:" + currentTargetIndex.ToString() + "distToTarget" + toTarget.magnitude.ToString());
+        if (toTarget.magnitude < 3)
+        {
             currentTargetIndex++;
+            System.Threading.Thread.Sleep(500);        
+        }
         if (currentTargetIndex >= targets.Length)
         {
             targetsTaken = true;
@@ -60,5 +65,26 @@ public class QuadrocopterScript : MonoBehaviour
     void FixedUpdate()
     {
         pickTargets(targets);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "WaterTrigger")
+        {
+            WaterTrigger();
+        }
+    }
+
+    void WaterTrigger()
+    {
+        Debug.Log("В зоне воды");
+        var newTargets = new List<Vector3> { new Vector3(rb.position.x, 11, rb.position.z) };
+        for (var i = currentTargetIndex + 1; i < targets.Length; i++)
+        {
+            newTargets.Add(targets[i]);
+        }
+        targets=newTargets.ToArray();
+    //     targets[currentTargetIndex] = new Vector3(rb.position.x, 9, rb.position.z);
+        FixedUpdate(); 
     }
 }
