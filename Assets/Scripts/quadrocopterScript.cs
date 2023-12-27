@@ -4,7 +4,7 @@ public class QuadrocopterScript : MonoBehaviour
 {
     public Rigidbody RB;
     private double movementAcceleration;
-    private float maxVeclocity;
+    public float maxVeclocity;
 
     public StateMachine SM;
     public ChargingState charging;
@@ -57,4 +57,21 @@ public class QuadrocopterScript : MonoBehaviour
     {
         SM.CurrentState.PhysicsUpdate();
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        switch (other.tag)
+        {
+            case "WaterTrigger":
+            grazing.WaterTrigger();
+            break;
+            case "OilTrigger":
+            //grazing.OilTrigger();
+            break;
+            case "HumanTrigger":
+            grazing.HumanTrigger();
+            break;
+        }
+    }
+
 }

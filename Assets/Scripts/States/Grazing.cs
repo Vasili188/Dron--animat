@@ -81,5 +81,21 @@ public class GrazingState : State
         }
         quadrocopter.MoveToTarget(waypoints[currentWaypointIndex]);
     }
+
+    public void WaterTrigger()
+    {
+        waypoints[currentWaypointIndex] = new Vector3(quadrocopter.RB.position.x, 5, quadrocopter.RB.position.z);
+    }
+
+    public void HumanTrigger()
+    {
+        quadrocopter.maxVeclocity *= 2;
+    }
+
+    public void OilTrigger(Vector3 target)
+    {
+        waypoints[currentWaypointIndex] = target;
+    }
+
 }
 
