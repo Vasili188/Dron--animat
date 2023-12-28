@@ -7,6 +7,7 @@ public class GrazingState : State
     private bool waypointsTaken;
     private int currentWaypointIndex;
     private Vector3[] waypoints;
+    private bool FoundOil;
 
     public GrazingState(QuadrocopterScript quadrocopter, StateMachine stateMachine, Vector3[] fieldBorders) : base(quadrocopter, stateMachine)
     {
@@ -84,6 +85,14 @@ public class GrazingState : State
         {
             if (quadrocopter.RB.velocity.magnitude != 0)
             {
+                if (FoundOil)
+                {
+                    Debug.Log("Информация о базе противника передана");
+                }
+                else
+                {
+                    Debug.Log("В заданной области баз противника не обнаружено");
+                }
                 quadrocopter.RB.velocity = new Vector3(0, 0, 0);
                 stateMachine.ChangeState(quadrocopter.charging);
             }
@@ -109,16 +118,19 @@ public class GrazingState : State
 
     public void WaterTrigger()
     {
-        waypoints[currentWaypointIndex] = new Vector3(quadrocopter.RB.position.x, 5, quadrocopter.RB.position.z);
+        //waypoints[currentWaypointIndex] = new Vector3(quadrocopter.RB.position.x, 5, quadrocopter.RB.position.z);
     }
 
     public void HumanTrigger()
     {
-        quadrocopter.maxVeclocity *= 2;
+        //quadrocopter.maxVeclocity *= 2;
     }
 
     public void OilTrigger(Vector3 target)
     {
+        Debug.Log("OIL");
+        FoundOil = true;
+        currentWaypointIndex = waypoints.Length-1;
         waypoints[currentWaypointIndex] = target;
     }
 
@@ -152,7 +164,7 @@ public class GrazingState : State
                                     corners.Item2 = corners.Item2 + fieldBorders[0])); //translating coordinates to absolute values
         return absPiecesCorners;
 
-        //��������� ������ ���� � ��������
+        //прибавить нижний угол к векторам
     }
 
 }
