@@ -66,7 +66,7 @@ public class QuadrocopterScript : MonoBehaviour
             grazing.WaterTrigger();
             break;
             case "OilTrigger":
-            //grazing.OilTrigger();
+            grazing.OilTrigger(other.GetComponent<SphereCollider>().transform.position);
             break;
             case "HumanTrigger":
             grazing.HumanTrigger();
