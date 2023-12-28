@@ -16,7 +16,7 @@ public class QuadrocopterScript : MonoBehaviour
     {
         RB = GetComponent<Rigidbody>();
         movementAcceleration = 5;
-        maxVeclocity = 7;
+        maxVeclocity = 3;
         SM = new StateMachine();
 
         charging = new ChargingState(this, SM);
