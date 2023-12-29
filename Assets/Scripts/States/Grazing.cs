@@ -122,9 +122,10 @@ public class GrazingState : State
         //waypoints[currentWaypointIndex] = new Vector3(quadrocopter.RB.position.x, 5, quadrocopter.RB.position.z);
     }
 
-    public void HumanTrigger()
+    public void HumanTrigger(Vector3 danger)
     {
-        // var alertness = new AlertnessState(quadrocopter, GrazingState.)
+        quadrocopter.alertness.triggerPosition = danger;
+        stateMachine.ChangeState(quadrocopter.alertness);
     }
 
     public void OilTrigger(Vector3 target)
