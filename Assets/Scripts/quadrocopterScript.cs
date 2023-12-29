@@ -10,7 +10,7 @@ public class QuadrocopterScript : MonoBehaviour
     public ChargingState charging;
     public GrazingState grazing;
     public AlertnessState alertness;
-    public Vector3[] fieldBorders;
+    public (Vector3, Vector3)[] fieldsBorders;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +25,11 @@ public class QuadrocopterScript : MonoBehaviour
         fieldBorders = new Vector3[2] { new Vector3(0, 0, 0),
                                         new Vector3(100, 0, 100)}; //test Borders
         grazing = new GrazingState(this, SM, fieldBorders);
+        fieldsBorders = new (Vector3, Vector3)[2] {
+                                                    (new Vector3(-35,12,-25),new Vector3(28,12,22)),
+                                                    (new Vector3(-76, 10, -235),new Vector3(71, 10, -77))
+                                                   }; //test Borders
+        grazing = new GrazingState(this, SM, fieldsBorders);
         SM.Initialize(grazing);
     }
 
@@ -65,14 +70,14 @@ public class QuadrocopterScript : MonoBehaviour
         switch (other.tag)
         {
             case "WaterTrigger":
-            grazing.WaterTrigger();
-            break;
+                grazing.WaterTrigger();
+                break;
             case "OilTrigger":
-            grazing.OilTrigger(other.GetComponent<SphereCollider>().transform.position);
-            break;
+                grazing.OilTrigger(other.GetComponent<SphereCollider>().transform.position);
+                break;
             case "HumanTrigger":
-            grazing.HumanTrigger(other.GetComponent<CapsuleCollider>().transform.position);
-            break;
+                grazing.HumanTrigger(other.GetComponent<CapsuleCollider>().transform.position);
+                break;
         }
     }
 
