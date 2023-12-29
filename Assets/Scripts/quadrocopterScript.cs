@@ -23,8 +23,8 @@ public class QuadrocopterScript : MonoBehaviour
         charging = new ChargingState(this, SM);
         alertness = new AlertnessState(this, SM);
         fieldsBorders = new (Vector3, Vector3)[2] {
-                                                    (new Vector3(-35,12,-25),new Vector3(28,12,22)),
-                                                    (new Vector3(-76, 10, -235),new Vector3(71, 10, -77))
+                                                    (new Vector3(-35,0,-25),new Vector3(28,0,22)),
+                                                    (new Vector3(-76,0,-235),new Vector3(71,0,-77))
                                                    }; //test Borders
         grazing = new GrazingState(this, SM, fieldsBorders);
         SM.Initialize(grazing);
