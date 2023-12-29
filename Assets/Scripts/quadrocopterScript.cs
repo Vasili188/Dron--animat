@@ -22,9 +22,6 @@ public class QuadrocopterScript : MonoBehaviour
 
         charging = new ChargingState(this, SM);
         alertness = new AlertnessState(this, SM);
-        fieldBorders = new Vector3[2] { new Vector3(0, 0, 0),
-                                        new Vector3(100, 0, 100)}; //test Borders
-        grazing = new GrazingState(this, SM, fieldBorders);
         fieldsBorders = new (Vector3, Vector3)[2] {
                                                     (new Vector3(-35,12,-25),new Vector3(28,12,22)),
                                                     (new Vector3(-76, 10, -235),new Vector3(71, 10, -77))
