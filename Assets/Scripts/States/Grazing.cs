@@ -14,8 +14,9 @@ public class GrazingState : State
         waypointsTaken = false;
         currentWaypointIndex = 0;
         //waypoints = new Vector3[2] { new Vector3(50, 30, 30), new Vector3(50, 10, 50) };
-        var fieldPiecesCorners = SplitField(fieldBorders, 2).ToArray();
-        waypoints = new Vector3[4];
+        var sideSplit = 5;
+        var fieldPiecesCorners = SplitField(fieldBorders, sideSplit).ToArray();
+        waypoints = new Vector3[sideSplit*sideSplit];
         Debug.Log(fieldPiecesCorners[0].Item1);
         Debug.Log(fieldPiecesCorners[0].Item2);
 
@@ -163,8 +164,6 @@ public class GrazingState : State
                 .Select(corners => (corners.Item1 = corners.Item1 + fieldBorders[0],
                                     corners.Item2 = corners.Item2 + fieldBorders[0])); //translating coordinates to absolute values
         return absPiecesCorners;
-
-        //прибавить нижний угол к векторам
     }
 
 }
