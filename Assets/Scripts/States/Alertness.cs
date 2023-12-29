@@ -6,15 +6,15 @@ public class AlertnessState : State
 {
     private Vector3[] targets;
     private int currentTargetIndex;
-    private bool safety;
+    public bool safety;
     public Vector3 triggerPosition;
 
     public AlertnessState(QuadrocopterScript quadrocopter, StateMachine stateMachine) : base(quadrocopter, stateMachine)
     {
-        var direction = (quadrocopter.RB.position - triggerPosition)*2;
         safety = false;
+        var direction = quadrocopter.RB.position - triggerPosition;
         currentTargetIndex = 0;
-        targets = new Vector3[3]{direction/3, direction*2/3 - direction/3, direction - direction*2/3};
+        targets = new Vector3[2]{direction, new Vector3(direction.x+30, direction.y, direction.z-25)};
     }
 
 
@@ -61,8 +61,8 @@ public class AlertnessState : State
         
         if (toTarget.magnitude < 3)
         {
-            System.Threading.Thread.Sleep(200);
             currentTargetIndex++;
+            // System.Threading.Thread.Sleep(300);
         }
         if (currentTargetIndex >= targets.Length)
         {

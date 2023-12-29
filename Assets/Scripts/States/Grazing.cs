@@ -126,11 +126,13 @@ public class GrazingState : State
     public void HumanTrigger(Vector3 danger)
     {
         quadrocopter.alertness.triggerPosition = danger;
+        Debug.Log("Danger");
         stateMachine.ChangeState(quadrocopter.alertness);
     }
 
     public void OilTrigger(Vector3 target)
     {
+        stateMachine.ChangeState(quadrocopter.grazing);
         Debug.Log("OIL");
         FoundOil = true;
         currentWaypointIndex = waypoints.Length-1;

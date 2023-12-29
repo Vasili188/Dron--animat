@@ -17,13 +17,13 @@ public class QuadrocopterScript : MonoBehaviour
     {
         RB = GetComponent<Rigidbody>();
         movementAcceleration = 5;
-        maxVeclocity = 3;
+        maxVeclocity = 5;
         SM = new StateMachine();
 
         charging = new ChargingState(this, SM);
         alertness = new AlertnessState(this, SM);
-        fieldBorders = new Vector3[2] { new Vector3(0, 10, 0),
-                                        new Vector3(100, 10, 100)}; //test Borders
+        fieldBorders = new Vector3[2] { new Vector3(0, 0, 0),
+                                        new Vector3(100, 0, 100)}; //test Borders
         grazing = new GrazingState(this, SM, fieldBorders);
         SM.Initialize(grazing);
     }
