@@ -9,29 +9,23 @@ public class GrazingState : State
     private int currentWaypointIndex;
     private Vector3[] waypoints;
     private bool FoundOil;
+    private (Vector3,Vector3) fieldBorders; 
+    private (Vector3, Vector3)[] fieldsBorders;
+    private int currentField;
 
-    public GrazingState(QuadrocopterScript quadrocopter, StateMachine stateMachine, Vector3[] fieldBorders) : base(quadrocopter, stateMachine)
+    public GrazingState(QuadrocopterScript quadrocopter, StateMachine stateMachine, (Vector3,Vector3)[] fieldsBorders) : base(quadrocopter, stateMachine)
     {
-        waypointsTaken = false;
-        currentWaypointIndex = 0;
-        //waypoints = new Vector3[2] { new Vector3(50, 30, 30), new Vector3(50, 10, 50) };
-        var sideSplit = 5;
-        var fieldPiecesCorners = SplitField(fieldBorders, sideSplit).ToArray();
-        waypoints = new Vector3[sideSplit*sideSplit];
-        Debug.Log(fieldPiecesCorners[0].Item1);
-        Debug.Log(fieldPiecesCorners[0].Item2);
+        this.fieldsBorders = fieldsBorders;
+        currentField = 0;
+        SetFieldBorders(fieldsBorders[0], 5);
+        //this.fieldBorders = fieldBorders;
+        //waypointsTaken = false;
+        //currentWaypointIndex = 0;
+        ////waypoints = new Vector3[2] { new Vector3(50, 30, 30), new Vector3(50, 10, 50) };
+        //var sideSplit = 5;
+        //var fieldPiecesCorners = SplitField(fieldBorders, sideSplit).ToArray();
+        //waypoints = new Vector3[sideSplit*sideSplit];
 
-
-        Debug.Log(fieldPiecesCorners[1].Item1);
-        Debug.Log(fieldPiecesCorners[1].Item2);
-
-
-        Debug.Log(fieldPiecesCorners[2].Item1);
-        Debug.Log(fieldPiecesCorners[2].Item2);
-
-
-        Debug.Log(fieldPiecesCorners[3].Item1);
-        Debug.Log(fieldPiecesCorners[3].Item2);
 
 
         //fieldPiecesCorners
@@ -39,10 +33,10 @@ public class GrazingState : State
         //             waypoints[index] = GetRandomPoint(pieceCorners.Item1,
         //                                               pieceCorners.Item2));
 
-        for (int i = 0;i < fieldPiecesCorners.Length; i++)
-        {
-            waypoints[i] = GetRandomPoint(fieldPiecesCorners[i].Item1, fieldPiecesCorners[i].Item2);
-        }
+        //for (int i = 0;i < fieldPiecesCorners.Length; i++)
+        //{
+        //    waypoints[i] = GetRandomPoint(fieldPiecesCorners[i].Item1, fieldPiecesCorners[i].Item2);
+        //}
     }
 
     public override void Enter()
@@ -98,6 +92,7 @@ public class GrazingState : State
                 quadrocopter.RB.velocity = new Vector3(0, 0, 0);
                 stateMachine.ChangeState(quadrocopter.charging);
             }
+            
             return;
         }
         
@@ -112,7 +107,13 @@ public class GrazingState : State
         if (currentWaypointIndex >= waypoints.Length)
         {
             //Debug.Log(string.Format("all waypoints taken. waypointsCount={0}. currentWaypointIndex={1}",waypoints.Length,currentWaypointIndex));
+            
             waypointsTaken = true;
+
+            currentField += 1;
+            if (currentField >= fieldsBorders.Length) return;
+            SetFieldBorders(fieldsBorders[currentField], 5);
+
             return;
         }
         quadrocopter.MoveToTarget(waypoints[currentWaypointIndex]);
@@ -137,13 +138,13 @@ public class GrazingState : State
         waypoints[currentWaypointIndex] = target;
     }
 
-    private IEnumerable<(UnityEngine.Vector3, UnityEngine.Vector3)> SplitField(Vector3[] fieldBorders, int sideSplitNumber) //splits field to sideSplitNum^2 pieces
+    private IEnumerable<(UnityEngine.Vector3, UnityEngine.Vector3)> SplitField((Vector3,Vector3) fieldBorders, int sideSplitNumber) //splits field to sideSplitNum^2 pieces
     {
         var piecesCorners = new (Vector3, Vector3)[sideSplitNumber * sideSplitNumber];
-        Vector3 fieldSize = fieldBorders[1] - fieldBorders[0];
-        var xSideLength = fieldSize.x / sideSplitNumber;
-        var zSideLength = fieldSize.z / sideSplitNumber;
-        int height = Random.Range((int)fieldBorders[0].y, (int)fieldBorders[1].y);
+        Vector3 fieldSize = fieldBorders.Item1 - fieldBorders.Item2;
+        var xSideLength = Mathf.Abs(fieldSize.x / sideSplitNumber);
+        var zSideLength = Mathf.Abs(fieldSize.z / sideSplitNumber);
+        int height = Random.Range((int)fieldBorders.Item1.y, (int)fieldBorders.Item2.y);
         for (var i = 0; i < sideSplitNumber; i++)
         {
             for (var j = 0; j < sideSplitNumber; j++)
@@ -161,12 +162,43 @@ public class GrazingState : State
             }
         }
 
-
         var absPiecesCorners = piecesCorners
-                .Select(corners => (corners.Item1 = corners.Item1 + fieldBorders[0],
-                                    corners.Item2 = corners.Item2 + fieldBorders[0])); //translating coordinates to absolute values
+                .Select(corners => (corners.Item1 = corners.Item1 + fieldBorders.Item1,
+                                    corners.Item2 = corners.Item2 + fieldBorders.Item1)); //translating coordinates to absolute values
         return absPiecesCorners;
     }
+    private void SetFieldBorders((Vector3,Vector3) fieldBorders, int sideSplittingNumber)
+    {
+        this.fieldBorders = fieldBorders;
+
+        waypointsTaken = false;
+        currentWaypointIndex = 0; 
+        var fieldPiecesCorners = SplitField(fieldBorders, sideSplittingNumber).ToArray();
+        waypoints = new Vector3[sideSplittingNumber * sideSplittingNumber];
+
+        for (int i = 0; i < fieldPiecesCorners.Length; i++)
+        {
+            waypoints[i] = GetRandomPoint(fieldPiecesCorners[i].Item1, fieldPiecesCorners[i].Item2);
+        }
+
+        waypointsTaken = false;
+
+        Debug.Log(fieldPiecesCorners[0].Item1);
+        Debug.Log(fieldPiecesCorners[0].Item2);
+
+
+        Debug.Log(fieldPiecesCorners[1].Item1);
+        Debug.Log(fieldPiecesCorners[1].Item2);
+
+
+        Debug.Log(fieldPiecesCorners[2].Item1);
+        Debug.Log(fieldPiecesCorners[2].Item2);
+
+
+        Debug.Log(fieldPiecesCorners[3].Item1);
+        Debug.Log(fieldPiecesCorners[3].Item2);
+    }
+
 
 }
 
