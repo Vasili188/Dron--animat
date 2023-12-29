@@ -9,6 +9,7 @@ public class QuadrocopterScript : MonoBehaviour
     public StateMachine SM;
     public ChargingState charging;
     public GrazingState grazing;
+    // public AlertnessState alertness;
     public Vector3[] fieldBorders;
 
     // Start is called before the first frame update

@@ -1,3 +1,4 @@
+using TreeEditor;
 using UnityEngine;
 
 public class GrazingState : State
@@ -100,7 +101,7 @@ public class GrazingState : State
 
     public void HumanTrigger()
     {
-        //quadrocopter.maxVeclocity *= 2;
+        // var alertness = new AlertnessState(quadrocopter, GrazingState.)
     }
 
     public void OilTrigger(Vector3 target)
