@@ -15,6 +15,7 @@ public class AlertnessState : State
         safety = false;
         currentTargetIndex = 0;
         targets = new Vector3[3]{direction/3, direction*2/3 - direction/3, direction - direction*2/3};
+        Debug.Log(targets);
     }
 
 
