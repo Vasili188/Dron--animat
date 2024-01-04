@@ -102,6 +102,7 @@ public class GrazingState : State
         {
             Debug.Log(string.Format("Taken waypoint #{0}, coord{1}", currentWaypointIndex, waypoints[currentWaypointIndex]));
             currentWaypointIndex++;
+            quadrocopter.RB.velocity =Vector3.zero;
             //Debug.Log("Next waypoint:" + waypoints[currentWaypointIndex]);
         }
         if (currentWaypointIndex >= waypoints.Length)
