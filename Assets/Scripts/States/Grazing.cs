@@ -17,7 +17,7 @@ public class GrazingState : State
     {
         this.fieldsBorders = fieldsBorders;
         currentField = 0;
-        SetFieldBorders(fieldsBorders[0], 5);
+        SetFieldBorders(fieldsBorders[0], 4);
         //this.fieldBorders = fieldBorders;
         //waypointsTaken = false;
         //currentWaypointIndex = 0;
@@ -102,6 +102,7 @@ public class GrazingState : State
         {
             Debug.Log(string.Format("Taken waypoint #{0}, coord{1}", currentWaypointIndex, waypoints[currentWaypointIndex]));
             currentWaypointIndex++;
+            quadrocopter.RB.velocity =Vector3.zero;
             //Debug.Log("Next waypoint:" + waypoints[currentWaypointIndex]);
         }
         if (currentWaypointIndex >= waypoints.Length)
@@ -112,7 +113,7 @@ public class GrazingState : State
 
             currentField += 1;
             if (currentField >= fieldsBorders.Length) return;
-            SetFieldBorders(fieldsBorders[currentField], 5);
+            SetFieldBorders(fieldsBorders[currentField], 4);
 
             return;
         }
