@@ -122,7 +122,8 @@ public class GrazingState : State
         Vector3 fieldSize = fieldBorders.Item1 - fieldBorders.Item2;
         var xSideLength = Mathf.Abs(fieldSize.x / sideSplitNumber);
         var zSideLength = Mathf.Abs(fieldSize.z / sideSplitNumber);
-        int height = Random.Range((int)fieldBorders.Item1.y, (int)fieldBorders.Item2.y);
+        int height = Random.Range((int)fieldBorders.Item1.y, (int)fieldBorders.Item2.y); //height in absolute values
+        height -= (int)fieldBorders.Item1.y; // height relative to the field borders
         for (var i = 0; i < sideSplitNumber; i++)
         {
             for (var j = 0; j < sideSplitNumber; j++)
