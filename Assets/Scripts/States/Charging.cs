@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class ChargingState : State
 {
     public ChargingState(QuadrocopterScript quadrocopter, StateMachine stateMachine) : base(quadrocopter, stateMachine)
