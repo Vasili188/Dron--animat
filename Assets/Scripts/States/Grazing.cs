@@ -10,12 +10,14 @@ public class GrazingState : State
     private bool FoundOil; 
     private (Vector3, Vector3)[] fieldsBorders;
     private int currentField;
+    private int fieldSplitNum;
 
     public GrazingState(QuadrocopterScript quadrocopter, StateMachine stateMachine, (Vector3,Vector3)[] fieldsBorders) : base(quadrocopter, stateMachine)
     {
+        fieldSplitNum = 2;
         this.fieldsBorders = fieldsBorders;
         currentField = 0;
-        SetFieldBorders(fieldsBorders[0], 4);
+        SetFieldBorders(fieldsBorders[0], fieldSplitNum);
     }
 
     public override void Enter()
@@ -60,17 +62,17 @@ public class GrazingState : State
         {
             if (quadrocopter.RB.velocity.magnitude != 0)
             {
-                if (FoundOil)
-                {
-                    Debug.Log("Информация о базе противника передана");
-                }
-                else
-                {
-                    Debug.Log("В заданной области баз противника не обнаружено");
-                }
                 quadrocopter.RB.velocity = new Vector3(0, 0, 0);
-                stateMachine.ChangeState(quadrocopter.awaiting);
             }
+            if (FoundOil)
+            {
+                Debug.Log("Информация о базе противника передана");
+            }
+            else
+            {
+                Debug.Log("В заданной области баз противника не обнаружено");
+            }
+            stateMachine.ChangeState(quadrocopter.returningToHome);
             
             return;
         }
@@ -88,7 +90,7 @@ public class GrazingState : State
 
             currentField += 1;
             if (currentField >= fieldsBorders.Length) return;
-            SetFieldBorders(fieldsBorders[currentField], 4);
+            SetFieldBorders(fieldsBorders[currentField], fieldSplitNum);
 
             return;
         }

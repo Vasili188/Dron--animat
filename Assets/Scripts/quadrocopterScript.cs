@@ -10,6 +10,7 @@ public class QuadrocopterScript : MonoBehaviour
     public AwaitingState awaiting;
     public GrazingState grazing;
     public AlertnessState alertness;
+    public ReturningToHomeState returningToHome;
     public (Vector3, Vector3)[] fieldsBorders;
 
     // Start is called before the first frame update
@@ -27,6 +28,7 @@ public class QuadrocopterScript : MonoBehaviour
                                                     (new Vector3(-76, 10, -235),new Vector3(71, 10, -77))
                                                    }; //test Borders
         grazing = new GrazingState(this, SM, fieldsBorders);
+        returningToHome = new ReturningToHomeState(this, SM, GameObject.Find("Home").transform.position);
         SM.Initialize(grazing);
     }
 
