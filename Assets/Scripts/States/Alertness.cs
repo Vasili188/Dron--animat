@@ -15,6 +15,7 @@ public class AlertnessState : State
         var direction = quadrocopter.RB.position - triggerPosition;
         currentTargetIndex = 0;
         targets = new Vector3[2]{direction, new Vector3(direction.x+30, direction.y, direction.z-25)};
+        quadrocopter.maxVeclocity *= 2;
     }
 
 
@@ -51,6 +52,7 @@ public class AlertnessState : State
             if (quadrocopter.RB.velocity.magnitude != 0)
             {
                 quadrocopter.RB.velocity = new Vector3(0, 0, 0);
+                quadrocopter.maxVeclocity /= 2;
                 stateMachine.ChangeState(quadrocopter.grazing);
             }
         
