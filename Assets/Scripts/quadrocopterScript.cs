@@ -7,7 +7,7 @@ public class QuadrocopterScript : MonoBehaviour
     public float maxVeclocity;
 
     public StateMachine SM;
-    public ChargingState charging;
+    public AwaitingState awaiting;
     public GrazingState grazing;
     public AlertnessState alertness;
     public (Vector3, Vector3)[] fieldsBorders;
@@ -20,7 +20,7 @@ public class QuadrocopterScript : MonoBehaviour
         maxVeclocity = 3;
         SM = new StateMachine();
 
-        charging = new ChargingState(this, SM);
+        awaiting = new AwaitingState(this, SM);
         alertness = new AlertnessState(this, SM);
         fieldsBorders = new (Vector3, Vector3)[2] {
                                                     (new Vector3(-35,12,-25),new Vector3(28,12,22)),

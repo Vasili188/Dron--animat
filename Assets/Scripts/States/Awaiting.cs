@@ -1,6 +1,6 @@
-public class ChargingState : State
+public class AwaitingState : State
 {
-    public ChargingState(QuadrocopterScript quadrocopter, StateMachine stateMachine) : base(quadrocopter, stateMachine)
+    public AwaitingState(QuadrocopterScript quadrocopter, StateMachine stateMachine) : base(quadrocopter, stateMachine)
     {
 
     }

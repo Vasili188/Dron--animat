@@ -69,7 +69,7 @@ public class GrazingState : State
                     Debug.Log("В заданной области баз противника не обнаружено");
                 }
                 quadrocopter.RB.velocity = new Vector3(0, 0, 0);
-                stateMachine.ChangeState(quadrocopter.charging);
+                stateMachine.ChangeState(quadrocopter.awaiting);
             }
             
             return;
