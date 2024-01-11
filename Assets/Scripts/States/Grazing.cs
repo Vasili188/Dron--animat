@@ -7,14 +7,14 @@ public class GrazingState : State
     private bool waypointsTaken;
     private int currentWaypointIndex;
     private Vector3[] waypoints;
-    private bool FoundOil; 
+    private bool FoundOil;
     private (Vector3, Vector3)[] fieldsBorders;
     private int currentField;
     private int fieldSplitNum;
 
-    public GrazingState(QuadrocopterScript quadrocopter, StateMachine stateMachine, (Vector3,Vector3)[] fieldsBorders) : base(quadrocopter, stateMachine)
+    public GrazingState(QuadrocopterScript quadrocopter, StateMachine stateMachine, (Vector3, Vector3)[] fieldsBorders) : base(quadrocopter, stateMachine)
     {
-        fieldSplitNum = 2;
+        fieldSplitNum = 3;
         this.fieldsBorders = fieldsBorders;
         currentField = 0;
         SetFieldBorders(fieldsBorders[0], fieldSplitNum);
@@ -73,16 +73,16 @@ public class GrazingState : State
                 Debug.Log("В заданной области баз противника не обнаружено");
             }
             stateMachine.ChangeState(quadrocopter.returningToHome);
-            
+
             return;
         }
-        
+
         Vector3 toTarget = waypoints[currentWaypointIndex] - quadrocopter.RB.position;
 
         if (toTarget.magnitude < 3)
         {
             currentWaypointIndex++;
-            quadrocopter.RB.velocity =Vector3.zero;
+            quadrocopter.RB.velocity = Vector3.zero;
         }
         if (currentWaypointIndex >= waypoints.Length)
         {
@@ -112,11 +112,11 @@ public class GrazingState : State
     {
         Debug.Log("OIL");
         FoundOil = true;
-        currentWaypointIndex = waypoints.Length-1;
+        currentWaypointIndex = waypoints.Length - 1;
         waypoints[currentWaypointIndex] = target;
     }
 
-    private (Vector3, Vector3)[] SplitField((Vector3,Vector3) fieldBorders, int sideSplitNumber) //splits field to sideSplitNum^2 pieces
+    private (Vector3, Vector3)[] SplitField((Vector3, Vector3) fieldBorders, int sideSplitNumber) //splits field to sideSplitNum^2 pieces
     {
         var piecesCorners = new (Vector3, Vector3)[sideSplitNumber * sideSplitNumber];
         Vector3 fieldSize = fieldBorders.Item1 - fieldBorders.Item2;
@@ -126,18 +126,34 @@ public class GrazingState : State
         height -= (int)fieldBorders.Item1.y; // height relative to the field borders
         for (var i = 0; i < sideSplitNumber; i++)
         {
-            for (var j = 0; j < sideSplitNumber; j++)
+            var xMin = i * xSideLength;
+            var xMax = (i + 1) * xSideLength;
+            if (i % 2 == 0)
             {
-                var xMin = i * xSideLength;
-                var xMax = (i + 1) * xSideLength;
+                for (var j = 0; j < sideSplitNumber; j++)
+                {
+                    var zMin = j * zSideLength;
+                    var zMax = (j + 1) * zSideLength;
 
-                var zMin = j * zSideLength;
-                var zMax = (j + 1) * zSideLength;
+                    Vector3 corner1 = new Vector3(xMin, height, zMin);
+                    Vector3 corner2 = new Vector3(xMax, height, zMax);
 
-                Vector3 corner1 = new Vector3(xMin, height, zMin);
-                Vector3 corner2 = new Vector3(xMax, height, zMax);
+                    piecesCorners[i * sideSplitNumber + j] = (corner1, corner2);
+                }
+            }
+            else
+            {
+                for (int j = sideSplitNumber - 1, count = 0; j >= 0; j--, count++)
+                {
 
-                piecesCorners[i * sideSplitNumber + j] = (corner1, corner2);
+                    var zMin = j * zSideLength;
+                    var zMax = (j + 1) * zSideLength;
+
+                    Vector3 corner1 = new Vector3(xMin, height, zMin);
+                    Vector3 corner2 = new Vector3(xMax, height, zMax);
+
+                    piecesCorners[i * sideSplitNumber + count] = (corner1, corner2);
+                }
             }
         }
 
@@ -146,10 +162,10 @@ public class GrazingState : State
                                     corners.Item2 = corners.Item2 + fieldBorders.Item1)); //translating coordinates to absolute values
         return absPiecesCorners.ToArray();
     }
-    private void SetFieldBorders((Vector3,Vector3) fieldBorders, int sideSplittingNumber)
+    private void SetFieldBorders((Vector3, Vector3) fieldBorders, int sideSplittingNumber)
     {
         waypointsTaken = false;
-        currentWaypointIndex = 0; 
+        currentWaypointIndex = 0;
         var fieldPiecesCorners = SplitField(fieldBorders, sideSplittingNumber);
         waypoints = new Vector3[sideSplittingNumber * sideSplittingNumber];
 
