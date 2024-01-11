@@ -87,7 +87,7 @@ public class GrazingState : State
         if (currentWaypointIndex >= waypoints.Length)
         {
             waypointsTaken = true;
-
+            quadrocopter.maxVeclocity = 5;
             currentField += 1;
             if (currentField >= fieldsBorders.Length) return;
             SetFieldBorders(fieldsBorders[currentField], fieldSplitNum);
@@ -112,7 +112,8 @@ public class GrazingState : State
     {
         Debug.Log("OIL");
         FoundOil = true;
-        currentWaypointIndex = waypoints.Length - 1;
+        currentWaypointIndex = waypoints.Length-1;
+        quadrocopter.maxVeclocity = 3;
         waypoints[currentWaypointIndex] = target;
     }
 

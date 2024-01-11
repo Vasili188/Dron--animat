@@ -17,8 +17,8 @@ public class QuadrocopterScript : MonoBehaviour
     void Start()
     {
         RB = GetComponent<Rigidbody>();
-        movementAcceleration = 5;
-        maxVeclocity = 3;
+        movementAcceleration = 3;
+        maxVeclocity = 5;
         SM = new StateMachine();
 
         awaiting = new AwaitingState(this, SM);
